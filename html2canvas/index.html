@@ -11,7 +11,7 @@
         $(document).ready( function(){
                 $(".example1").on("click", function(event) {
                         event.preventDefault();
-                        html2canvas($(".test")[0]).then(function(canvas) {
+                        html2canvas(document.body).then(function(canvas) {
                             document.body.appendChild(Canvas2Image.convertToImage(canvas,canvas.width,canvas.height))//转换图片
                             Canvas2Image.saveAsPNG(canvas, canvas.width, canvas.height);//保存图片
                         });
@@ -22,7 +22,7 @@
     <body>
          
         Hello!
-        <div class="test" style="background-color: #abc;">
+        <div class="test" style="background-color: #abc; height: 2000px;">
             html5页面截图
         </div>
         <textArea id="textArea" col="20" rows="10" ></textArea>
