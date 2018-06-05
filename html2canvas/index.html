@@ -3,6 +3,7 @@
     <head>
         <meta name="layout" content="main">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+        <meta name="viewport" content="width=device-width">
         <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="../node_modules/html2canvas/dist/html2canvas.js"></script>
         <script type="text/javascript" src="../node_modules/canvas2image/canvas2image.js"></script>
@@ -62,7 +63,7 @@ function convert2canvas(cntElem) {
     var width = parseValue(shareContent.offsetWidth); //获取dom 宽度
     var height = parseValue(shareContent.offsetHeight); //获取dom 高度
     var canvas = document.createElement("canvas"); //创建一个canvas节点
-    var scale = DPR(); //定义任意放大倍数 支持小数
+    var scale = 2; //定义任意放大倍数 支持小数
     canvas.width = width * scale; //定义canvas 宽度 * 缩放
     canvas.height = height * scale; //定义canvas高度 *缩放
     canvas.getContext("2d").scale(scale, scale); //获取context,设置scale 
