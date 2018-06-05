@@ -8,72 +8,110 @@
         <script type="text/javascript" src="../node_modules/canvas2image/canvas2image.js"></script>
          
         <script  type="text/javascript" >
-        $(document).ready( function(){
-                $(".example1").on("click", function(event) {
-                    console.log('test');
-                    var ele = $(".test")[0];
-                    event.preventDefault();
-                    // convert2canvas(ele);
-                    html2canvas(ele).then(function(canvas) {
-                        console.log(canvas.width,canvas.height);
-                        var dataurl = canvas.toDataURL('');
-                        console.log(dataurl);
-                        var img = document.createElement('img');
-		                img.src = dataurl;
-                        
-                        // var img = Canvas2Image.convertToPNG(canvas,canvas.width,canvas.height);
-                        // console.log(img);
-                        document.body.appendChild(img);//转换图片
-                        // Canvas2Image.saveAsImage(canvas, canvas.width, canvas.height);//保存图片
-                    });
-                }); 
-        });
-
-        function convert2canvas(cntElem) {
-            var shareContent = cntElem;//需要截图的包裹的（原生的）DOM 对象
-            var width = shareContent.offsetWidth; //获取dom 宽度
-            var height = shareContent.offsetHeight; //获取dom 高度
-            var canvas = document.createElement("canvas"); //创建一个canvas节点
-            var scale = 2; //定义任意放大倍数 支持小数
-            canvas.width = width * scale; //定义canvas 宽度 * 缩放
-            canvas.height = height * scale; //定义canvas高度 *缩放
-            canvas.getContext("2d").scale(scale, scale); //获取context,设置scale 
-            var opts = {
-                scale: scale, // 添加的scale 参数
-                canvas: canvas, //自定义 canvas
-                // logging: true, //日志开关，便于查看html2canvas的内部执行流程
-                width: width, //dom 原始宽度
-                height: height,
-                useCORS: true // 【重要】开启跨域配置
-            };
-            html2canvas(shareContent, opts).then(function (canvas) {
-                var context = canvas.getContext('2d');
-                // 【重要】关闭抗锯齿
-                context.mozImageSmoothingEnabled = false;
-                context.webkitImageSmoothingEnabled = false;
-                context.msImageSmoothingEnabled = false;
-                context.imageSmoothingEnabled = false;
+$(document).ready( function(){
+        $(".example1").on("click", function(event) {
+            console.log('test');
+            var ele = $(".test")[0];
+            event.preventDefault();
+            convert2canvas(ele);
+            // html2canvas(ele).then(function(canvas) {
+            //     console.log(canvas.width,canvas.height);
+            //     var dataurl = canvas.toDataURL();
+            //     console.log(dataurl);
+            //     var img = document.createElement('img');
+            //     img.src = dataurl;
                 
-                // 【重要】默认转化的格式为png,也可设置为其他格式
-                var img = Canvas2Image.convertToJPEG(canvas, canvas.width, canvas.height);
-                document.body.appendChild(img);
-                $(img).css({
-                    "width": canvas.width / 2 + "px",
-                    "height": canvas.height / 2 + "px",
-                });
-                // Canvas2Image.saveAsImage(canvas, canvas.width, canvas.height);//保存图片
-            });
-        }
+            //     // var img = Canvas2Image.convertToPNG(canvas,canvas.width,canvas.height);
+            //     // console.log(img);
+            //     document.body.appendChild(img);//转换图片
+            //     // Canvas2Image.saveAsImage(canvas, canvas.width, canvas.height);//保存图片
+            // });
+        }); 
+});
+
+
+/**
+ * 根据window.devicePixelRatio获取像素比
+ */
+function DPR() {
+    if (window.devicePixelRatio && window.devicePixelRatio > 1) {
+        return window.devicePixelRatio;
+    }
+    return 1;
+}
+/**
+ *  将传入值转为整数
+ */
+function parseValue(value) {
+    return parseInt(value, 10);
+};
+
+function saveFile(data, filename) {
+    const save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+    save_link.href = data;
+    save_link.download = filename;
+
+    const event = document.createEvent('MouseEvents');
+    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    save_link.dispatchEvent(event);
+}
+
+
+function convert2canvas(cntElem) {
+    var shareContent = cntElem;//需要截图的包裹的（原生的）DOM 对象
+    var width = parseValue(shareContent.offsetWidth); //获取dom 宽度
+    var height = parseValue(shareContent.offsetHeight); //获取dom 高度
+    var canvas = document.createElement("canvas"); //创建一个canvas节点
+    var scale = DPR(); //定义任意放大倍数 支持小数
+    canvas.width = width * scale; //定义canvas 宽度 * 缩放
+    canvas.height = height * scale; //定义canvas高度 *缩放
+    canvas.getContext("2d").scale(scale, scale); //获取context,设置scale 
+    console.log('scale',scale);
+    
+    var opts = {
+        scale: scale, // 添加的scale 参数
+        canvas: canvas, //自定义 canvas
+        // logging: true, //日志开关，便于查看html2canvas的内部执行流程
+        width: width, //dom 原始宽度
+        height: height,
+        useCORS: true // 【重要】开启跨域配置
+    };
+    html2canvas(shareContent, opts).then(function (canvas) {
+        var context = canvas.getContext('2d');
+        // 【重要】关闭抗锯齿
+        context.mozImageSmoothingEnabled = false;
+        context.webkitImageSmoothingEnabled = false;
+        context.msImageSmoothingEnabled = false;
+        context.imageSmoothingEnabled = false;
+        
+        // 【重要】默认转化的格式为png,也可设置为其他格式
+        var img = Canvas2Image.convertToJPEG(canvas, canvas.width, canvas.height);
+        console.log(img);
+        
+        document.body.appendChild(img);
+        $(img).css({
+            "width": canvas.width / 2 + "px",
+            "height": canvas.height / 2 + "px",
+        });
+        // saveFile(img,test.png)
+        Canvas2Image.saveAsJPEG(canvas, canvas.width, canvas.height);//保存图片
+    });
+}
         </script>
+
         <style>
             input{
                 height: 50px;
                 width: 200px;
             }
+            img{
+                width: 90%;
+                margin: 0 auto;
+            }
         </style>
     </head>
     <body>
-        <div class="test" style="background-color: #abc; height: auto; width: 100%; margin: 0 auto;font-size: 50px;">
+        <div class="test" style="background-color: #abc; height: auto; width: 90%; margin: 0 auto;">
        
             h甲方：北京小川在线网络技术有限公司 <br/>
             
